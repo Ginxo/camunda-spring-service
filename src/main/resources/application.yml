@@ -1,0 +1,54 @@
+logging:
+  level:
+    ROOT: ${LOG_LEVEL:INFO}
+
+spring:
+  profiles:
+    active: ${ACTIVE_PROFILE:dev}
+  jackson:
+    serialization:
+      indent-output: true
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME:user}
+    password: ${DATASOURCE_PASSWORD}
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+  jpa:
+    database-platform: ${DATABASE_DIALECT}
+    properties:
+      hibernate.id.new_generator_mappings: true
+      hibernate.connection.provider_disables_autocommit: true
+      hibernate.cache.use_second_level_cache: true
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: true
+    hibernate:
+      ddl-auto: update
+
+camunda.bpm:
+  webapp:
+    index-redirect-enabled: true
+  admin-user:
+    id: ${CAMUNDA_ADMIN_USER:kermit}
+    password: ${CAMUNDA_ADMIN_PASSWORD:superSecret}
+
+server:
+  port: ${SERVER_PORT:8080}
+
+---
+
+spring:
+  profiles: dev
+  h2:
+    console:
+      enabled: true
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:h2:file:./target/h2db/db/database;DB_CLOSE_DELAY=-1
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    database: H2
+    show-sql: true
